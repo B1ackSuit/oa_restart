@@ -59,6 +59,9 @@
         <commons-lang3-v>3.12.0</commons-lang3-v>
 
         <jaxb-api-v>2.3.0</jaxb-api-v>
+
+        <boot-log4j2-v>2.7.3</boot-log4j2-v>
+        <log4j2-v>2.19.0</log4j2-v>
     </properties>
 
 
@@ -67,7 +70,6 @@
     <dependencyManagement>
 
         <dependencies>
-
 
             <!--JWT 依赖-->
             <dependency>
@@ -81,7 +83,6 @@
                 <artifactId>kaptcha</artifactId>
                 <version>${kaptcha-v}</version>
             </dependency>
-
 
             <!-- activiti7版本 -->
             <dependency>
@@ -237,6 +238,38 @@
                 <version>${jaxb-api-v}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-log4j2</artifactId>
+                <version>${boot-log4j2-v}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j2-v}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j2-v}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-jul</artifactId>
+                <version>${log4j2-v}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j2-v}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -270,7 +303,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+
 
     </dependencies>
 </project>
