@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="baseDir">logs</Property>
+        <Property name="message-pattern">[%d{HH:mm:ss:SSS}] [%t] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>${message-pattern}</Pattern>
+            </PatternLayout>
+        </Console>
+        <RollingRandomAccessFile name="RollingRandomAccessFile_Other" fileName="${baseDir}/app-other.log" filePattern="${baseDir}/$${date:yyyy-MM}/$${date:dd}/app-other-%d{HH-mm}-%i.log" immediateFlush="false">
+            <PatternLayout>
+                <Pattern>${message-pattern}</Pattern>
+            </PatternLayout>
+            <Filters>
+                <ThresholdFilter level="FATAL" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="ALL" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="RollingRandomAccessFile_Warn" fileName="${baseDir}/app-warn.log" filePattern="${baseDir}/$${date:yyyy-MM}/$${date:dd}/app-warn-%d{HH-mm}-%i.log" immediateFlush="false">
+            <PatternLayout>
+                <Pattern>${message-pattern}</Pattern>
+            </PatternLayout>
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="RollingRandomAccessFile_Error" fileName="${baseDir}/app-error.log" filePattern="${baseDir}/$${date:yyyy-MM}/$${date:dd}/app-error-%d{HH}-%i.log" immediateFlush="false">
+            <PatternLayout>
+                <Pattern>${message-pattern}</Pattern>
+            </PatternLayout>
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+        </RollingRandomAccessFile>
+        <Async name="Async">
+            <AppenderRef ref="RollingRandomAccessFile_Warn" />
+            <AppenderRef ref="RollingRandomAccessFile_Error" />
+            <AppenderRef ref="RollingRandomAccessFile_Other" />
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="Async" />
+        </Root>
+        <Logger name="cn.ean.oa_emp.service.impl.LoginServiceImpl" level="ERROR" additivity="false">
+            <AppenderRef ref="Console" />
+        </Logger>
+    </Loggers>
+</Configuration>

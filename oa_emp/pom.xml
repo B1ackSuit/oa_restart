@@ -6,7 +6,7 @@
 		<groupId>cn.ean</groupId>
 		<artifactId>oa_restart</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath/> <!-- lookup parent from repository -->
+<!--		<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 	</parent>
 	<groupId>cn.ean</groupId>
 	<artifactId>oa_emp</artifactId>
@@ -148,6 +148,10 @@
 			<artifactId>spring-rabbit-test</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
 
 	</dependencies>
 
