@@ -64,8 +64,9 @@
             <AppenderRef ref="Console" />
             <AppenderRef ref="Async" />
         </Root>
-        <Logger name="cn.ean.oa_emp.service.impl.LoginServiceImpl" level="ERROR" additivity="false">
+        <Logger name="cn.ean.oaemp.service.impl.LoginServiceImpl" level="ERROR" additivity="false">
             <AppenderRef ref="Console" />
+            <AppenderRef ref="Async" />
         </Logger>
     </Loggers>
 </Configuration>
