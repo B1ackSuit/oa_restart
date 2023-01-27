@@ -39,6 +39,19 @@
         </collection>
     </resultMap>
 
+    <resultMap id="MenusWithChildren" type="cn.ean.oaemp.model.po.MenuPO" extends="BaseResultMap">
+        <id column="id1" property="pkId"/>
+        <result column="name1" property="name"/>
+        <collection property="children" ofType="cn.ean.oaemp.model.po.MenuPO">
+            <id column="id2" property="pkId"/>
+            <result column="name2" property="name"/>
+            <collection property="children" ofType="cn.ean.oaemp.model.po.MenuPO">
+                <id column="id3" property="pkId"/>
+                <result column="name3" property="name"/>
+            </collection>
+        </collection>
+    </resultMap>
+
     <!-- 根据用户id查询菜单列表 -->
     <select id="getMenusByUserId" resultMap="Menus">
         SELECT DISTINCT
@@ -77,6 +90,20 @@
             LEFT JOIN oa_emp_menu_role mr ON m.pk_id = mr.menu_id
             LEFT JOIN oa_emp_role r ON mr.role_id = r.pk_id
         ORDER BY m.pk_id
+    </select>
+
+    <select id="getAllMenus" resultMap="MenusWithChildren">
+        SELECT
+            m1.pk_id AS id1,
+            m1.`name` AS name1,
+            m2.pk_id as id2,
+            m2.`name` as name2,
+            m3.pk_id as id3,
+            m3.`name` as name3
+        FROM oa_emp_menu m1
+            LEFT JOIN oa_emp_menu m2 ON m1.pk_id = m2.parent_id
+            LEFT JOIN oa_emp_menu m3 ON m2.pk_id = m3.parent_id
+        WHERE m3.is_enabled = true
     </select>
 
 

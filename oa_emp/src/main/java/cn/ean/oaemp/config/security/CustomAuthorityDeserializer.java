@@ -28,6 +28,7 @@ public class CustomAuthorityDeserializer extends JsonDeserializer {
         ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
         JsonNode jsonNode = mapper.readTree(jsonParser);
         List<GrantedAuthority> grantedAuthorities = new LinkedList<>();
+
         Iterator<JsonNode> elements = jsonNode.elements();
         while (elements.hasNext()) {
             JsonNode next = elements.next();

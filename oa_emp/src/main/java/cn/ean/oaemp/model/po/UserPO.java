@@ -74,9 +74,6 @@ public class UserPO implements Serializable, UserDetails {
     @TableField(exist = false)
     private List<RolePO> roles;
 
-
-
-
     /**
      * Returns the authorities granted to the user. Cannot return <code>null</code>.
      *
@@ -84,7 +81,6 @@ public class UserPO implements Serializable, UserDetails {
      *
      * @return the authorities, sorted by natural key (never <code>null</code>)
      */
-
     @Override
     @JsonDeserialize(using = CustomAuthorityDeserializer.class)
     public Collection<? extends GrantedAuthority> getAuthorities() {

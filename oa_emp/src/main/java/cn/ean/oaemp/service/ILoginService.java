@@ -22,6 +22,5 @@ public interface ILoginService{
      */
     ResponseBO login(String username, String password, String code, HttpServletRequest request);
 
-
     ResponseBO signup(UserLoginVO userLoginVO);
 }

@@ -15,9 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class OaEmpLogAspect {
 
-
-
     protected void handleLog(JoinPoint joinPoint, Log controllerLog, Exception e, Object jsonResult) {
-
     }
+
 }

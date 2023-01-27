@@ -37,7 +37,6 @@ public class RoleFilter implements FilterInvocationSecurityMetadataSource {
 
     AntPathMatcher antPathMatcher = new AntPathMatcher();
 
-
     /**
      * Accesses the {@code ConfigAttribute}s that apply to a given secure object.
      *
@@ -57,7 +56,6 @@ public class RoleFilter implements FilterInvocationSecurityMetadataSource {
                 return org.springframework.security.access.SecurityConfig.createList(str);
             }
         }
-
         return org.springframework.security.access.SecurityConfig.createList("ROLE_LOGIN");
     }
 

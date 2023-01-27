@@ -37,7 +37,6 @@ public class Swagger2Config {
                 .securityContexts(securityContexts());
     }
 
-
     private ApiInfo apiInfo() {
         //设置文档信息
         return new ApiInfoBuilder()

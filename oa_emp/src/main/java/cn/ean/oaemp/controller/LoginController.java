@@ -23,7 +23,6 @@ public class LoginController {
 
     private ILoginService loginService;
 
-
     @Autowired
     public LoginController(ILoginService loginService) {
         this.loginService = loginService;

@@ -20,12 +20,10 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @TableName("oa_emp_menu")
-
 @ApiModel(value="MenuPO对象", description="MenuPO对象")
 public class MenuPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
 
     @ApiModelProperty(value = "id")
     @TableId(value = "pk_id", type = IdType.AUTO)

@@ -94,9 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //除上面外，所有请求都要求认证
                 .anyRequest()
                 .authenticated()
-
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
-
                     @Override
                     public <O extends FilterSecurityInterceptor> O postProcess(O o) {
                         o.setAccessDecisionManager(roleUrlDecisionManager);

@@ -149,7 +149,4 @@ public class JwtTokenUtil {
         claims.put(CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);
     }
-
-
-
 }
