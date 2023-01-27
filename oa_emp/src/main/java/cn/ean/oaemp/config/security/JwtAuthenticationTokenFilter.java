@@ -37,31 +37,24 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    public JwtAuthenticationTokenFilter() {
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String authHeader = httpServletRequest.getHeader(tokenHeader);
-        // 存在token
+
         if (null != authHeader && authHeader.startsWith(tokenHead)) {
 
-            // 将JWT的tokenHead截取掉，就是token
             String authToken = authHeader.substring(tokenHead.length());
             String userName = jwtTokenUtils.getUserNameFromToken(authToken);
 
-            // token存在用户名，但是未登录
+
             if (null != userName && null == SecurityContextHolder.getContext().getAuthentication()) {
 
-                // 自动登录(UserDetailsService已重写)
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-
-                // 验证token是否有效，重新设置用户对象
                 if (jwtTokenUtils.validateToken(authToken, userDetails)) {
-                    // 更新security登录用户对象
+
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(userDetails,
                                     null,
@@ -70,6 +63,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                             .buildDetails(httpServletRequest));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
+
+
+
             }
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);

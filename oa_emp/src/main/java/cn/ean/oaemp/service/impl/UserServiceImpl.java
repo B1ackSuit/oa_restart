@@ -1,6 +1,9 @@
 package cn.ean.oaemp.service.impl;
 
+import cn.ean.oaemp.mapper.RoleMapper;
 import cn.ean.oaemp.mapper.UserMapper;
+import cn.ean.oaemp.model.po.MenuPO;
+import cn.ean.oaemp.model.po.RolePO;
 import cn.ean.oaemp.model.po.UserPO;
 import cn.ean.oaemp.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -9,7 +12,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @FileName UserServiceImpl
@@ -22,10 +28,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
 
     private UserMapper userMapper;
 
+    private RoleMapper roleMapper;
+
 
     @Autowired
-    public UserServiceImpl(UserMapper userMapper) {
+    public UserServiceImpl(UserMapper userMapper,
+                           RoleMapper roleMapper) {
         this.userMapper = userMapper;
+        this.roleMapper = roleMapper;
     }
 
 
@@ -39,7 +49,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
     public UserPO getUserByUserName(String username) {
         return userMapper.selectOne(new QueryWrapper<UserPO>()
                 .eq("uk_workid", username)
-                .eq("enabled", true));
+                .eq("is_enabled", true));
+    }
+
+    /**
+     * 根据用户id查询角色列表
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<RolePO> getRoles(Integer userId) {
+        return roleMapper.getRoles(userId);
     }
 
 

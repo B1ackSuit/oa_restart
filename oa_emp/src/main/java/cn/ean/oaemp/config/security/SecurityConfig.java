@@ -5,14 +5,17 @@ import cn.ean.oaemp.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -31,14 +34,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
+    private RoleFilter roleFilter;
+
+    private RoleUrlDecisionManager roleUrlDecisionManager;
+
     @Autowired
     public SecurityConfig(IUserService userService,
                           RestfulAccessDeniedHandler restfulAccessDeniedHandler,
-                          RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
+                          RestAuthenticationEntryPoint restAuthenticationEntryPoint,
+                          RoleFilter roleFilter,
+                          RoleUrlDecisionManager roleUrlDecisionManager
+                          ) {
 
         this.userService = userService;
         this.restfulAccessDeniedHandler = restfulAccessDeniedHandler;
         this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
+        this.roleFilter = roleFilter;
+        this.roleUrlDecisionManager = roleUrlDecisionManager;
     }
 
     @Override
@@ -82,6 +94,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //除上面外，所有请求都要求认证
                 .anyRequest()
                 .authenticated()
+
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setAccessDecisionManager(roleUrlDecisionManager);
+                        o.setSecurityMetadataSource(roleFilter);
+                        return o;
+                    }
+                })
                 .and()
                 //禁用缓存
                 .headers()
@@ -101,9 +123,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return username -> {
             UserPO userPO = userService.getUserByUserName(username);
             if (null != userPO) {
+                userPO.setRoles(userService.getRoles(userPO.getPkId()));
                 return userPO;
             }
-            return null;
+            throw new UsernameNotFoundException("用户名或密码不正确");
         };
     }
 

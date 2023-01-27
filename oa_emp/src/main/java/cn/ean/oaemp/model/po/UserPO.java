@@ -1,9 +1,11 @@
 package cn.ean.oaemp.model.po;
 
+import cn.ean.oaemp.config.security.CustomAuthorityDeserializer;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -12,11 +14,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
-
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -62,9 +66,13 @@ public class UserPO implements Serializable, UserDetails {
     private String userFace;
 
     @ApiModelProperty(value = "是否启用")
-    @TableField(value = "enabled")
+    @TableField(value = "is_enabled")
     @Getter(AccessLevel.NONE)
     private Boolean enabled;
+
+    @ApiModelProperty(value = "角色")
+    @TableField(exist = false)
+    private List<RolePO> roles;
 
 
 
@@ -72,11 +80,19 @@ public class UserPO implements Serializable, UserDetails {
     /**
      * Returns the authorities granted to the user. Cannot return <code>null</code>.
      *
+     * 把对应的角色名转化为SimpleGrantedAuthority
+     *
      * @return the authorities, sorted by natural key (never <code>null</code>)
      */
+
     @Override
+    @JsonDeserialize(using = CustomAuthorityDeserializer.class)
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<SimpleGrantedAuthority> collection = roles
+                .stream()
+                .map(rolePO -> new SimpleGrantedAuthority(rolePO.getAuthority()))
+                .collect(Collectors.toList());
+        return collection;
     }
 
     /**

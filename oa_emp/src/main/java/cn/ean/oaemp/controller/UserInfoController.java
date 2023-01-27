@@ -1,5 +1,6 @@
 package cn.ean.oaemp.controller;
 
+import cn.ean.oaemp.model.po.RolePO;
 import cn.ean.oaemp.model.po.UserPO;
 import cn.ean.oaemp.service.IUserService;
 import io.swagger.annotations.ApiOperation;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 
 /**
  * @FileName UserInfoController
@@ -32,7 +34,10 @@ public class UserInfoController {
         String name = principal.getName();
         UserPO user = userService.getUserByUserName(name);
         // 前端不需要用户密码，设置为null作为保护
-        user.setPassword(null);
+        user = user.setPassword(null);
+        List<RolePO> roles = userService.getRoles(user.getPkId());
+        System.out.println(roles.get(0).toString());
+        user = user.setRoles(userService.getRoles(user.getPkId()));
         return user;
     }
 

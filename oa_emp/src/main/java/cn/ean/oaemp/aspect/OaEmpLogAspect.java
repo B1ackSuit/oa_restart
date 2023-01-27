@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
  **/
 @Aspect
 @Component
-public class OaEmpLogAspect extends LogAspect {
+public class OaEmpLogAspect {
 
 
-    @Override
+
     protected void handleLog(JoinPoint joinPoint, Log controllerLog, Exception e, Object jsonResult) {
 
     }

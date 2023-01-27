@@ -1,7 +1,11 @@
 package cn.ean.oaemp.service;
 
+import cn.ean.oaemp.model.po.MenuPO;
+import cn.ean.oaemp.model.po.RolePO;
 import cn.ean.oaemp.model.po.UserPO;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @FileName IUserService
@@ -16,4 +20,12 @@ public interface IUserService extends IService<UserPO> {
      * @return
      */
     UserPO getUserByUserName(String workId);
+
+    /**
+     * 根据用户id查询角色列表
+     *
+     * @param userId
+     * @return
+     */
+    List<RolePO> getRoles(Integer userId);
 }
