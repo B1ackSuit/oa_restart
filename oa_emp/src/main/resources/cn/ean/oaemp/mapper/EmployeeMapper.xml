@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ean.oaemp.mapper.EmployeeMapper">
+
+    <resultMap id="EmployeeInfo" type="cn.ean.oaemp.model.po.EmployeePO">
+        <association property="nationPO" javaType="cn.ean.oaemp.model.po.NationPO">
+            <id column="nation_id" property="pkId" />
+            <result column="nation_name" property="nationName" />
+        </association>
+        <association property="politicsStatusPO" javaType="cn.ean.oaemp.model.po.PoliticsStatusPO">
+            <id column="polstat_id" property="pkId" />
+            <result column="politics_status_name" property="politicsStatusName" />
+        </association>
+        <association property="departmentPO" javaType="cn.ean.oaemp.model.po.DepartmentPO">
+            <id column="dep_id" property="pkId" />
+            <result column="dep_name" property="depName" />
+        </association>
+        <association property="jobLevelPO" javaType="cn.ean.oaemp.model.po.JobLevelPO">
+            <id column="job_level_id" property="pkId" />
+            <result column="level_name" property="levelName" />
+        </association>
+        <association property="positionPO" javaType="cn.ean.oaemp.model.po.PositionPO">
+            <id column="pos_id" property="pkId" />
+            <result column="position_name" property="positionName" />
+        </association>
+    </resultMap>
+
+    <select id="getEmployeeByPage" resultMap="EmployeeInfo">
+        SELECT
+            emp.*,
+            nation.pk_id AS nation_id,
+            nation.nation_name AS nation_name,
+            polstat.pk_id AS polstat_id,
+            polstat.politics_status_name AS polstat_status_name,
+            dep.pk_id AS dep_id,
+            dep.dep_name AS dep_name,
+            joblv.pk_id AS job_level_id,
+            joblv.level_name AS job_level_name,
+            pos.pk_id AS pos_id,
+            pos.position_name AS position_name
+        FROM
+            oa_emp_employee emp,
+            oa_emp_nation nation,
+            oa_emp_politics_status polstat,
+            oa_emp_department dep,
+            oa_emp_job_level joblv,
+            oa_emp_position pos
+        WHERE emp.nation_id = nation.pk_id
+        AND emp.politic_id = polstat.pk_id
+        AND emp.department_id = dep.pk_id
+        AND emp.job_level_id = joblv.pk_id
+        AND emp.pos_id = pos.pk_id
+        <if test = "null != employee.empName and '' != employee.empName">
+            AND emp.emp_name LIKE CONCAT('%', #{employee.empName}, '%')
+        </if>
+        <if test = "null != employee.politicId">
+            AND emp.politic_id = #{employee.politicId}
+        </if>
+        <if test = "null != employee.jobLevelId">
+            AND emp.job_level_id = #{employee.jobLevelId}
+        </if>
+        <if test = "null != employee.posId">
+            AND emp.pos_id = #{employee.posId}
+        </if>
+        <if test = "null != employee.engageForm and '' != employee.engageForm">
+            AND emp.engage_form = #{employee.engageForm}
+        </if>
+        <if test = "null != employee.departmentId" >
+            AND emp.department_id = #{employee.departmentId}
+        </if>
+        <if test = "null != beginDateScope and 2 == beginDateScope.length" >
+            AND emp.begin_date BETWEEN #{employee.beginDateScope[0]} and #{employee.beginDateScope[1]}
+        </if>
+        ORDER BY emp.pk_id
+    </select>
+
+    <select id="getEmployee" resultMap="EmployeeInfo">
+        SELECT
+            emp.*,
+            nation.pk_id AS nation_id,
+            nation.nation_name AS nation_name,
+            polstat.pk_id AS polstat_id,
+            polstat.politics_status_name AS polstat_status_name,
+            dep.pk_id AS dep_id,
+            dep.dep_name AS dep_name,
+            joblv.pk_id AS job_level_id,
+            joblv.level_name AS job_level_name,
+            pos.pk_id AS pos_id,
+            pos.position_name AS position_name
+        FROM
+            oa_emp_employee emp,
+            oa_emp_nation nation,
+            oa_emp_politics_status polstat,
+            oa_emp_department dep,
+            oa_emp_job_level joblv,
+            oa_emp_position pos
+        WHERE
+            emp.nation_id = nation.pk_id
+        AND emp.politic_id = polstat.pk_id
+        AND emp.department_id = dep.pk_id
+        AND emp.job_level_id = joblv.pk_id
+        AND emp.pos_id = pos.pk_id
+        <if test="null != id">
+            AND emp.pk_id = #{id}
+        </if>
+        ORDER BY emp.pk_id
+    </select>
+
+</mapper>

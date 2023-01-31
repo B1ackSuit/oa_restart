@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = false,of = "name")
+@EqualsAndHashCode(callSuper = false,of = "positionName")
 @Accessors(chain = true)
 @TableName("oa_emp_position")
 @ApiModel(value="PositionPO对象", description="PositionPO对象")
@@ -36,6 +36,7 @@ public class PositionPO implements Serializable {
 
     @ApiModelProperty(value = "职位")
     @TableField(value = "position_name")
+    @Excel(name = "职位",width = 15)
     @NonNull
     private String positionName;
 

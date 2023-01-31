@@ -12,7 +12,35 @@
         <result column="is_enabled" property="enabled"/>
     </resultMap>
 
+    <resultMap id="UserWithRole" type="cn.ean.oaemp.model.po.UserPO" extends="BaseResultMap">
+        <collection property="roles" ofType="cn.ean.oaemp.model.po.RolePO">
+            <id column="role_id" property="pkId" />
+            <result column="authority" property="authority" />
+            <result column="auth_desc" property="authDescription" />
+        </collection>
+    </resultMap>
 
+    <select id="getAllUsers" resultMap="UserWithRole">
+        SELECT
+            user.pk_id,
+            user.uk_workid,
+            user.password,
+            user.emp_name,
+            user.phone,
+            user.user_face,
+            user.is_enabled,
+            r.pk_id AS role_id,
+            r.authority AS authority,
+            r.auth_desc AS auth_desc
+        FROM oa_emp_user user
+            LEFT JOIN oa_emp_user_role ur ON ur.user_id = user.pk_id
+            LEFT JOIN oa_emp_role r ON r.pk_id = ur.role_id
+        WHERE r.pk_id != #{id}
+        <if test="null != keyWords and '' != keyWords" >
+            AND user.emp_name LIKE concat ('%', #{keyWords}, '%')
+        </if>
+        ORDER BY user.pk_id
+    </select>
 
 
 </mapper>

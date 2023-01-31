@@ -15,4 +15,12 @@ import java.util.List;
  **/
 @Mapper
 public interface UserMapper extends BaseMapper<UserPO> {
+
+    /**
+     * 获取所有用户
+     *
+     * @param keyWords
+     * @return 用户
+     */
+    List<UserPO> getAllUsers(Integer pkId, String keyWords);
 }

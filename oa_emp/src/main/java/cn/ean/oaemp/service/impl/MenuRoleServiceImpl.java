@@ -8,6 +8,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.beans.Transient;
 
 /**
  * @FileName MenuRoleServiceImpl
@@ -32,7 +35,7 @@ public class MenuRoleServiceImpl extends ServiceImpl<MenuRoleMapper, MenuRolePO>
      * @return ResponseBO
      */
     @Override
-
+    @Transactional
     public ResponseBO updateMenuRole(Integer roleId, Integer[] menuIds) {
         menuRoleMapper.delete(new QueryWrapper<MenuRolePO>().eq("role_id", roleId));
         if (null == menuIds || menuIds.length == 0) {
