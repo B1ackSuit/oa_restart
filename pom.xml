@@ -18,6 +18,7 @@
 
     <modules>
         <module>oa_emp</module>
+        <module>oa_mail</module>
     </modules>
 
     <properties>
